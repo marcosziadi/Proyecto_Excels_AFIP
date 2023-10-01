@@ -32,7 +32,7 @@ for(c in 1:nrow(clientes_cuit)){
     data_final$Fecha <- as.Date(data_final$Fecha, format = "%d/%m/%Y")
     data_final <- data_final[order(data_final$Fecha), ]
     data_final$Fecha <- format(data_final$Fecha, format = "%d/%m/%Y")
-    
+    ``
     file_path_a <- paste0("C:/Users/Marcos/Desktop/Oficina/Monotributo/",clientes_cuit[c,1],".xlsx")
     wb <- loadWorkbook(file_path_a)
     excel_cliente <- read_xlsx(file_path_a, sheet = "VENTAS NUEVO", range = cell_cols(1:5))
