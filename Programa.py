@@ -6,8 +6,10 @@ from openpyxl.styles import Font, NamedStyle, Alignment
 from openpyxl.utils.dataframe import dataframe_to_rows
 import shutil
 import warnings
-warnings.filterwarnings("ignore", category=pd.errors.SettingWithCopyWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
+import math
+# warnings.filterwarnings("ignore", category=pd.errors.SettingWithCopyWarning)
+# warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore")
 
 def get_excel_files(user_name: str) -> list:
     all_files = os.listdir(os.path.join("C:\\Users","Marcos","Desktop", "Meses"))
@@ -54,7 +56,8 @@ def main_menu():
                 os.system('cls')
                 print("Los Excels de los siguientes clientes han sido actualizados:")
                 for cliente in clientes_cuits:
-                    print(cliente)
+                    print(cliente,"| Facturas faltantes: ",)
+                print("\nFaltan las siguientes facturas:")
                 asd = input("\nVolver al menú?\n1)Si\n2)No, salir del programa\nIngrese un Número: ")
                 if asd !="1":
                     break
@@ -92,6 +95,8 @@ def actualizacion_excel():
                 data_nueva = nota_de_credito(data_nueva)
                 excel_filepath = f'C:/Users/Marcos/Desktop/Oficina/Monotributo/{cuits.iloc[c, 0]}.xlsx'
                 data_excel = pd.read_excel(excel_filepath, sheet_name="VENTAS NUEVO", usecols="A:E", skiprows=5)
+                # data_excel_completa = (pd.concat([data_excel, data_nueva], axis=0)).reset_index(drop=True)
+                data_excel = chequeo_duplicados(data_excel, data_nueva)
                 size = len(data_excel)
                 wb = openpyxl.load_workbook(excel_filepath)
                 sheet = wb['VENTAS NUEVO']
@@ -111,6 +116,8 @@ def actualizacion_excel():
                 data_nueva = nota_de_credito(data_nueva)
                 excel_filepath = f'C:/Users/Marcos/Desktop/Oficina/Monotributo/{cuits.iloc[c, 0]}.xlsx'
                 data_excel = pd.read_excel(excel_filepath, sheet_name="COMPRAS NUEVO", usecols="A:E", skiprows=5)
+                # data_excel_completa = (pd.concat([data_excel, data_nueva], axis=0)).reset_index(drop=True)
+                data_excel = chequeo_duplicados(data_excel, data_nueva)
                 size = len(data_excel)
                 wb = openpyxl.load_workbook(excel_filepath)
                 sheet = wb['COMPRAS NUEVO']
@@ -195,6 +202,56 @@ def nuevo_excel():
                     if cell.column == 1:
                         cell.alignment = Alignment(horizontal="right")  
             wb.save(excel_file_path)
+
+def chequeo_duplicados(data_Excel_completa, data_nueva):
+    column_data_Excel_completa = data_Excel_completa.iloc[:,2]
+    column_data_nueva = data_nueva.iloc[:,2]
+    indices_duplicados = column_data_Excel_completa[column_data_Excel_completa.isin(column_data_nueva)].index
+    data_sin_duplicados = (column_data_Excel_completa.drop(index=indices_duplicados)).reset_index(drop=True)
+    return data_sin_duplicados
+
+def falta_factura():
+    cuits = pd.read_excel('C:/Users/Marcos/Desktop/PRUEBA CUITS.xlsx')
+    warnings.filterwarnings("ignore")
+    for c in range(len(cuits)):
+        excel_filepath = f'C:/Users/Marcos/Desktop/Oficina/Monotributo/{cuits.iloc[c, 0]}.xlsx'
+        with pd.ExcelFile(excel_filepath) as xls:
+            sheet_exists = "VENTAS NUEVO" in xls.sheet_names
+        if not sheet_exists:
+            # print(f"No hay hoja de ventas en el Excel de {cuits.iloc[c, 0]}\n\n")
+            continue
+        data_excel = pd.read_excel(excel_filepath, sheet_name="VENTAS NUEVO", usecols="A:E", skiprows=5)
+        facturas = []
+        factura_faltante = []
+        notas = []
+        notas_faltante = []
+        data_excel['Fecha'] = pd.to_datetime(data_excel['Fecha'])
+        data_excel['Fecha'] = data_excel['Fecha'].dt.strftime('%d/%m/%Y') 
+        data_excel['Fecha'] = pd.to_datetime(data_excel['Fecha'], format='%d/%m/%Y')
+        target_date = pd.to_datetime('2023-01-01')
+        for i in range(len(data_excel)):
+            data_excel_date = pd.to_datetime(data_excel.iloc[i, 0], format='%d/%m/%Y')
+            if data_excel.iloc[i,0] >= target_date:
+                if 'Nota' in str(data_excel.iloc[i,1]):
+                    if not math.isnan(data_excel.iloc[i,2]):
+                        notas.append(data_excel.iloc[i,2])
+                else:
+                    if not math.isnan(data_excel.iloc[i,2]):
+                        facturas.append(data_excel.iloc[i,2])
+        facturas.sort()
+        for i in range(len(facturas)-1):
+            if facturas[i]!=(int(facturas[i+1])-1):
+                factura_faltante.append(facturas[i+1]-1)
+        notas.sort()
+        for i in range(len(notas)-1):
+            if notas[i]!=(int(notas[i+1])-1):
+                notas_faltante.append(notas[i+1]-1)
+        if len(notas_faltante)>0 or len(factura_faltante)>0:
+            lista = ', '.join(map(str, factura_faltante))
+            print(cuits.iloc[c,0],"| Facturas |",lista)
+            lista = ', '.join(map(str, notas_faltante))
+            print(cuits.iloc[c,0],"| Notas |",lista)      
+            print("\n")  
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if __name__ == "__main__":
