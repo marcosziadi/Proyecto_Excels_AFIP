@@ -1,15 +1,12 @@
 import os
 import pandas as pd
-import glob
 import openpyxl
-from openpyxl.styles import Font, NamedStyle, Alignment
+from openpyxl.styles import Font, Alignment
 from openpyxl.utils.dataframe import dataframe_to_rows
 import shutil
 import warnings
-import math
-# warnings.filterwarnings("ignore", category=pd.errors.SettingWithCopyWarning)
-# warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore")
+
 
 def get_excel_files(user_name: str) -> list:
     all_files = os.listdir(os.path.join("C:\\Users","Marcos","Desktop", "Meses"))
@@ -25,11 +22,12 @@ def nota_de_credito(data_nueva: pd.DataFrame) -> pd.DataFrame:
             data_nueva.iloc[i,4] = data_nueva.iloc[i,4]*-1
     return data_nueva
 
-def data_cronologica(data: pd.DataFrame) -> pd.DataFrame:
-    data['Fecha'] = pd.to_datetime(data['Fecha'], format='%d/%m/%Y')
-    data = data.sort_values(by='Fecha', ascending=True).reset_index(drop=True)
-    data['Fecha'] = data['Fecha'].dt.strftime('%d/%m/%Y') 
-    return data
+def chequeo_duplicados(data_Excel_completa, data_nueva):
+    column_data_Excel_completa = data_Excel_completa.iloc[:,2]
+    column_data_nueva = data_nueva.iloc[:,2]
+    indices_duplicados = column_data_nueva[column_data_nueva.isin(column_data_Excel_completa)].index
+    data_sin_duplicados = (data_nueva.drop(index=indices_duplicados)).reset_index(drop=True)
+    return data_sin_duplicados
 
 def main_menu():
     while True:
@@ -56,8 +54,7 @@ def main_menu():
                 os.system('cls')
                 print("Los Excels de los siguientes clientes han sido actualizados:")
                 for cliente in clientes_cuits:
-                    print(cliente,"| Facturas faltantes: ",)
-                print("\nFaltan las siguientes facturas:")
+                    print(cliente)
                 asd = input("\nVolver al menú?\n1)Si\n2)No, salir del programa\nIngrese un Número: ")
                 if asd !="1":
                     break
@@ -91,12 +88,15 @@ def actualizacion_excel():
                         alldata_recibidos = pd.concat([alldata_recibidos, pd.read_excel(file_path,skiprows=1)], axis=0, ignore_index=True).reset_index(drop=True)  
                     i+=1
             if len(alldata_emitidos) > 0:
-                data_nueva = data_cronologica(alldata_emitidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Receptor', 'Imp. Total']])
+                data_nueva = alldata_emitidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Receptor', 'Imp. Total']]
+                data_nueva['Fecha'] = pd.to_datetime(data_nueva['Fecha'], format='%d/%m/%Y')
+                data_nueva['Fecha'] = data_nueva['Fecha'].dt.strftime('%d/%m/%Y') 
+                data_nueva = data_nueva.sort_values(by='Número Desde', ascending=True).reset_index(drop=True)
                 data_nueva = nota_de_credito(data_nueva)
+                data_nueva.columns =['Fecha','Tipo','Nro Factura','Denom. Receptor','Imp. Total']
                 excel_filepath = f'C:/Users/Marcos/Desktop/Oficina/Monotributo/{cuits.iloc[c, 0]}.xlsx'
                 data_excel = pd.read_excel(excel_filepath, sheet_name="VENTAS NUEVO", usecols="A:E", skiprows=5)
-                # data_excel_completa = (pd.concat([data_excel, data_nueva], axis=0)).reset_index(drop=True)
-                data_excel = chequeo_duplicados(data_excel, data_nueva)
+                data_nueva = chequeo_duplicados(data_excel, data_nueva)
                 size = len(data_excel)
                 wb = openpyxl.load_workbook(excel_filepath)
                 sheet = wb['VENTAS NUEVO']
@@ -112,12 +112,15 @@ def actualizacion_excel():
                             cell.alignment = Alignment(horizontal="center")  
                 wb.save(excel_filepath)
             if len(alldata_recibidos) > 0:
-                data_nueva = data_cronologica(alldata_recibidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Emisor', 'Imp. Total']])
+                data_nueva = alldata_recibidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Emisor', 'Imp. Total']]
+                data_nueva['Fecha'] = pd.to_datetime(data_nueva['Fecha'], format='%d/%m/%Y')
+                data_nueva = data_nueva.sort_values(by='Fecha', ascending=True).reset_index(drop=True)
+                data_nueva['Fecha'] = data_nueva['Fecha'].dt.strftime('%d/%m/%Y') 
                 data_nueva = nota_de_credito(data_nueva)
+                data_nueva.columns =['Fecha','Tipo','Nro Desde','Denom. Emisor','Imp. Total']
                 excel_filepath = f'C:/Users/Marcos/Desktop/Oficina/Monotributo/{cuits.iloc[c, 0]}.xlsx'
                 data_excel = pd.read_excel(excel_filepath, sheet_name="COMPRAS NUEVO", usecols="A:E", skiprows=5)
-                # data_excel_completa = (pd.concat([data_excel, data_nueva], axis=0)).reset_index(drop=True)
-                data_excel = chequeo_duplicados(data_excel, data_nueva)
+                data_nueva = chequeo_duplicados(data_excel, data_nueva)
                 size = len(data_excel)
                 wb = openpyxl.load_workbook(excel_filepath)
                 sheet = wb['COMPRAS NUEVO']
@@ -169,7 +172,10 @@ def nuevo_excel():
 
 
         if len(alldata_emitidos) > 0:
-            data_ventas = data_cronologica(alldata_emitidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Receptor', 'Imp. Total']])
+            data_ventas = alldata_emitidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Receptor', 'Imp. Total']]
+            data_ventas['Fecha'] = pd.to_datetime(data_ventas['Fecha'], format='%d/%m/%Y')
+            data_ventas['Fecha'] = data_ventas['Fecha'].dt.strftime('%d/%m/%Y') 
+            data_ventas = data_ventas.sort_values(by='Número Desde', ascending=True).reset_index(drop=True)
             data_ventas = nota_de_credito(data_ventas)
             data_excel = pd.read_excel(excel_file_path, sheet_name="VENTAS NUEVO", usecols="A:E", skiprows=5)
             size = len(data_excel)
@@ -186,8 +192,12 @@ def nuevo_excel():
                     elif cell.column == 3:
                         cell.alignment = Alignment(horizontal="center")  
             wb.save(excel_file_path)
+            
         if len(alldata_recibidos) > 0:
-            data_compras = data_cronologica(alldata_recibidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Emisor', 'Imp. Total']])
+            data_compras = alldata_recibidos[['Fecha', 'Tipo', 'Número Desde', 'Denominación Emisor', 'Imp. Total']]
+            data_compras['Fecha'] = pd.to_datetime(data_compras['Fecha'], format='%d/%m/%Y')
+            data_compras = data_compras.sort_values(by='Fecha', ascending=True).reset_index(drop=True)
+            data_compras['Fecha'] = data_compras['Fecha'].dt.strftime('%d/%m/%Y') 
             data_compras = nota_de_credito(data_compras)
             data_excel = pd.read_excel(excel_file_path, sheet_name="COMPRAS NUEVO", usecols="A:E", skiprows=5)
             size = len(data_excel)
@@ -202,57 +212,6 @@ def nuevo_excel():
                     if cell.column == 1:
                         cell.alignment = Alignment(horizontal="right")  
             wb.save(excel_file_path)
-
-def chequeo_duplicados(data_Excel_completa, data_nueva):
-    column_data_Excel_completa = data_Excel_completa.iloc[:,2]
-    column_data_nueva = data_nueva.iloc[:,2]
-    indices_duplicados = column_data_Excel_completa[column_data_Excel_completa.isin(column_data_nueva)].index
-    data_sin_duplicados = (column_data_Excel_completa.drop(index=indices_duplicados)).reset_index(drop=True)
-    return data_sin_duplicados
-
-def falta_factura():
-    cuits = pd.read_excel('C:/Users/Marcos/Desktop/PRUEBA CUITS.xlsx')
-    warnings.filterwarnings("ignore")
-    for c in range(len(cuits)):
-        excel_filepath = f'C:/Users/Marcos/Desktop/Oficina/Monotributo/{cuits.iloc[c, 0]}.xlsx'
-        with pd.ExcelFile(excel_filepath) as xls:
-            sheet_exists = "VENTAS NUEVO" in xls.sheet_names
-        if not sheet_exists:
-            # print(f"No hay hoja de ventas en el Excel de {cuits.iloc[c, 0]}\n\n")
-            continue
-        data_excel = pd.read_excel(excel_filepath, sheet_name="VENTAS NUEVO", usecols="A:E", skiprows=5)
-        facturas = []
-        factura_faltante = []
-        notas = []
-        notas_faltante = []
-        data_excel['Fecha'] = pd.to_datetime(data_excel['Fecha'])
-        data_excel['Fecha'] = data_excel['Fecha'].dt.strftime('%d/%m/%Y') 
-        data_excel['Fecha'] = pd.to_datetime(data_excel['Fecha'], format='%d/%m/%Y')
-        target_date = pd.to_datetime('2023-01-01')
-        for i in range(len(data_excel)):
-            data_excel_date = pd.to_datetime(data_excel.iloc[i, 0], format='%d/%m/%Y')
-            if data_excel.iloc[i,0] >= target_date:
-                if 'Nota' in str(data_excel.iloc[i,1]):
-                    if not math.isnan(data_excel.iloc[i,2]):
-                        notas.append(data_excel.iloc[i,2])
-                else:
-                    if not math.isnan(data_excel.iloc[i,2]):
-                        facturas.append(data_excel.iloc[i,2])
-        facturas.sort()
-        for i in range(len(facturas)-1):
-            if facturas[i]!=(int(facturas[i+1])-1):
-                factura_faltante.append(facturas[i+1]-1)
-        notas.sort()
-        for i in range(len(notas)-1):
-            if notas[i]!=(int(notas[i+1])-1):
-                notas_faltante.append(notas[i+1]-1)
-        if len(notas_faltante)>0 or len(factura_faltante)>0:
-            lista = ', '.join(map(str, factura_faltante))
-            print(cuits.iloc[c,0],"| Facturas |",lista)
-            lista = ', '.join(map(str, notas_faltante))
-            print(cuits.iloc[c,0],"| Notas |",lista)      
-            print("\n")  
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if __name__ == "__main__":
     main_menu()
