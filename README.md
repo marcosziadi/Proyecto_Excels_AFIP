@@ -23,13 +23,13 @@
    
    A pesar de eso, logré pasar el programa con exito, asi que ahora tocaba la parte de hacer que el programa actualice excels ya preexistentes.
    
-   La mayor dificultad se presentó con los Excels ya existentes, que eran aproximadamente 90, los cuales como fueron creados, actualizados y modificados manualmente, cada uno tenia un formato distinto, a veces incluso el formato variaba dentro del mismo excel, a veces habia multiples hojas dentro de un mismo excel con la misma informacion o con informacion que deberia estar toda junta en una hoja, como tambien informacion que deberia estar en hojas separadas; informacion que estaba en una columna pero deberia estar en otra, cadenas de caracteres donde deberian ir numeros, etc. A pesar de que logre programar ciertas funciones que ayudaron en el proceso de formatear todos los excels para que sigan todos una misma plantilla y estructura, gran parte del trabajo tuve que hacerlo manualmente porque no habia forma de automatizarlo con un programa.
+   La mayor dificultad se presentó con los Excels ya existentes, que eran aproximadamente 90, los cuales como fueron creados, actualizados y modificados manualmente, cada uno tenia un formato distinto, a veces incluso el formato variaba dentro del mismo excel, a veces habia multiples hojas dentro de un mismo archivo con la misma información o con información que deberia estar toda junta en una hoja, como tambien informacion que deberia estar en hojas separadas, o que estaba en una columna pero deberia estar en otra, cadenas de caracteres donde deberian ir numeros, etc. A pesar de que logre programar ciertas funciones que ayudaron en el proceso de formatear todos los excels para que sigan todos una misma plantilla y estructura, gran parte del trabajo tuve que hacerlo manualmente porque no habia forma de automatizarlo con un programa.
    
    Y esto tiene una explicación, los excels no fueron ni van a ser utilzados como bases de datos, sino como archivos de excel, donde se van a cambiar celdas, agregar comentarios, borrar filas, crear columnas, etc. Por lo que todas estas cualidades iban a dificultad la programacion de un código que iba a ser capaz de actualizar los excels dado de que el programa iba a tener que lograr agregar la información sin modificar en ningun aspecto ninguna otra celda del excel mas que las que vaya a utilizar para agregar la nueva información.
    
    Después de varias semanas, logré hacer un programa que lograba lo que se quería desde un principio:
 
-- El usuario puede descargar la cantidad de archivos de excel, de Facturas Emitidas como de Facturas Recibidas, que el quiera, de la cantidad de clientes que desee, y al ejecutar el programa este no solo iba a filtrar los excels que le perteneces a cada cliente, los formate y aplica cualquier modificación necesaria, sino que tambien encuentra el excel del cliente al cual se deseaba actualizar y actualiza dicho excel con la nueva información. Este procedimiento lo repite con todos los clientes a los que se les haya descargado nueva información para actualizar sus respectivos excels. (Además cumple la función que inicialmente programe: crear un excel para un nuevo cliente)
+- El usuario puede descargar la cantidad de archivos de excel, de Facturas Emitidas como tambien de Facturas Recibidas, que el quiera, de la cantidad de clientes que desee, y al ejecutar el programa este no solo va a filtrar los excels que le perteneces a cada cliente, los formatea y aplica cualquier modificación necesaria, sino que tambien encuentra el excel del cliente al cual se deseaba actualizar y actualiza dicho excel con la nueva información. Este procedimiento lo repite con todos los clientes a los que se les haya descargado nueva información para actualizar sus respectivos excels. (Además cumple la función que inicialmente programe: crear un excel para un nuevo cliente)
 
   Para mostrar como funciona el programa, a continuación voy a mostrar el output de ejecutar el programa habiendo descargado archivos de excel de dos clientes totalmente distintos, uno al cual quiero que actualice su excel ya preexistente, y otro que no existe su excel por lo cual voy a crear un neuvo excel con la informacion que acabo de descargar.
 
@@ -52,5 +52,10 @@
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/ae6e596e-79da-49e0-b150-5694fc54cb1d)
 
 - Lo bueno de haber logrado esa visualización en forma de escalera de la información con comandos de excel es que si mi papa tiene que hacer cambios manualmente a los clientes o agregar/sacar algo, dicha información se va a actualizar inmediatamente en la "zona verde" de visualización, por lo que es bastante práctico.
+
+  A continuación, dejo un ejemplo de como son los excels descargados directamente desde la afip:
+![image](https://github.com/marcosziadi/excels_afip/assets/82457357/26113a96-0f28-41a8-b29d-d04e52dded16)
+
+
   
 
