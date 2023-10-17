@@ -1,12 +1,8 @@
-# excels_afip
+# Proyecto Excels AFIP
 
-### Desarrollo
+### Utilización de R
    Durante mi trayectoria académica estudiando Licenciatura en Estadística, mi formación principal, relacionada con la programación, se centró en el lenguaje de programación R. Mi experiencia se enfocó en el manejo de bases de datos, análisis estadísticos y manipulación de archivos de Excel utilizando dicho lenguaje. Por lo tanto, inicialmente consideré que utilizar R para escribir este programa sería la elección más adecuada y eficiente debido a mi familiaridad y experiencia con este lenguaje.
-
-
-
-
-
+   
    Durante la primera semana de desarrollo, logré un avance significativo al crear un programa capaz de procesar múltiples archivos de Excel que contenían facturas emitidas y recibidas de un mismo cliente. Este programa generaba un nuevo archivo de Excel con toda la información esencial cuidadosamente organizada: celdas y columnas correctamente formateadas, ajustes en las fuentes y tamaños de letra, modificaciones en los importes, y proporcionaba una forma mucho más cómoda y eficiente de visualizar los datos:
    
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/00f16c2d-9adc-4018-bb17-77bf0baae165)
@@ -18,3 +14,13 @@
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/c2dbfa19-921d-4387-8314-261b5d45caa4)
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/e73b7faa-4ebc-4a49-ae56-d1ca2ea83ab0)
 
+   Cuando presenté el programa a mi papa, quedó considerablemente convencido por su utilidad. Sin embargo, surgió un desafío: en la mayoría de los casos, su tarea no implicaba la creación de un nuevo archivo Excel, sino la actualización de archivos ya existentes con nueva información. Por lo tanto, se volvió esencial adaptar el programa para que pudiera cumplir con esta función.
+   Además, aprendí en el proceso que R es un lenguaje de programación que se ejecuta de manera secuencial. Esto me planteó un obstáculo: no había una forma sencilla de crear un acceso directo para que los usuarios pudieran simplemente hacer doble clic en un ícono y abrir el programa, acceder a un menú de opciones en la consola y realizar las operaciones que desearan. Ante esta limitación, me dí cuenta de que R no era la opción viable para continuar con el proyecto. Fue en ese momento cuando decidí migrar todo el programa a Python, un lenguaje de programación que ofrecía la flexibilidad necesaria para lograr este tipo de interacción, basándome en mi experiencia previa con Python.
+
+### Utilización de Python
+   El pasar todo el código a Python fue un desafio, en especial debido a que gran aprte de las librerias que iba a terminar utilizando nunca las habia usado ni sabia como funcionaban, tampoco habia hecho ningun proceso de data cleaning intenso en el pasado, por lo que el proceso de pasar de R a Python fue una experiencia completamente nueva y desafiante.
+   A pesar de eso, logré pasar el programa con exito, asi que ahora tocaba la parte de hacer que el programa actualice excels ya preexistentes.
+   La mayor dificultad se presentó con los Excels ya existentes, que eran aproximadamente 90, los cuales como fueron creados, actualizados y modificados manualmente, cada uno tenia un formato distinto, a veces incluso el formato variaba dentro del mismo excel, a veces habia multiples hojas dentro de un mismo excel con la misma informacion o con informacion que deberia estar toda junta en una hoja, como tambien informacion que deberia estar en hojas separadas; informacion que estaba en una columna pero deberia estar en otra, cadenas de caracteres donde deberian ir numeros, etc. A pesar de que logre programar ciertas funciones que ayudaron en el proceso de formatear todos los excels para que sigan todos una misma plantilla y estructura, gran parte del trabajo tuve que hacerlo manualmente porque no habia forma de automatizarlo con un programa.
+   Y esto tiene una explicación, los excels no fueron ni van a ser utilzados como bases de datos, sino como archivos de excel, donde se van a cambiar celdas, agregar comentarios, borrar filas, crear columnas, etc. Por lo que todas estas cualidades iban a dificultad la programacion de un código que iba a ser capaz de actualizar los excels dado de que el programa iba a tener que lograr agregar la información sin modificar en ningun aspecto ninguna otra celda del excel mas que las que vaya a utilizar para agregar la nueva información.
+   Después de varias semanas, logré hacer un programa que lograba lo que se quería desde un principio:
+- El usuario puede descargar la cantidad de archivos de excel, de Facturas Emitidas como de Facturas Recibidas, que el quiera, de la cantidad de clientes que desee, y al ejecutar el programa este no solo iba a filtrar los excels que le perteneces a cada cliente, los formate y aplica cualquier modificación necesaria, sino que tambien encuentra el excel del cliente al cual se deseaba actualizar y actualiza dicho excel con la nueva información. Este procedimiento lo repite con todos los clientes a los que se les haya descargado nueva información para actualizar sus respectivos excels. (Además cumple la función que inicialmente programe: crear un excel para un nuevo cliente:
