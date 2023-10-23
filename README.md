@@ -1,8 +1,8 @@
 # Proyecto Excels AFIP
 ### Introducción
-   En un estudio contable, los contadores deben llevar al dia los registros de las facturas emitidas y recibidas de cada uno de sus clientes. Para ello, descargan dicha información de la afip (En general en un archivo de Excel), filtran la información que les parece más importante, hacen los cambios que crean que son necesarios, y despues guardan dicha información en un excel en donde se guardan todos los registros pasados de las facturas de dicho cliente (Repitiendo este proceso para cada uno de los clientes.
+   En un estudio contable, los contadores deben llevar al dia los registros de las facturas emitidas y recibidas de cada uno de sus clientes. Para ello, descargan dicha información de la afip (En general en un archivo de Excel), filtran la información que les parece más importante, hacen los cambios que crean que son necesarios, y despues guardan dicha información en un excel en donde se guardan todos los registros pasados de las facturas de dicho cliente (Repitiendo este proceso para cada uno de los clientes).
    
-   Este procedimiento no sería para nada demandante si fueran pocos clientes, pero cuando son muchos ya se vuelve bastante pesado y repetitivo el trabajo (En este caso, el estudio contable contaba con aproximadamente 90 clientes). Es por eso que decidí hacer un programa se encargue de esa función y poder prácticamente automatizar todo ese arduo y repetitivo trabajo.
+   Este procedimiento no sería para nada demandante si fueran pocos clientes, pero cuando son muchos ya se vuelve bastante pesado y repetitivo el trabajo (En este caso, el estudio contable contaba con aproximadamente 90 clientes). Es por eso que decidí hacer un programa que se encargue de esa función y poder prácticamente automatizar todo ese arduo y repetitivo trabajo.
 
    
 ### Utilización de R
@@ -47,12 +47,14 @@
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/5fb52dac-153b-4a18-9e81-5e65b1622292)
    El programa me confirma los clientes que actualizó, y eso es algo que podemos confirmar manualmente entrando al excel de dicha persona:
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/17ef06b3-bd1e-43ee-8c82-5b9e8955042f)
-![image](https://github.com/marcosziadi/excels_afip/assets/82457357/ca382ae7-5384-4ca9-bfa0-3b84a7b75694)
+   Podemos tambien observar como en la zona verde los datos tambien se actualizaron por lo que hace bastante práctica la visualización e interpretación de la nueva información.
+
+![image](https://github.com/marcosziadi/Proyecto_Excels_AFIP/assets/82457357/8ddc3319-91f8-4084-a799-3af9c2f38dae)
 
    Ahora, creemos al nuevo cliente:
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/205073eb-882b-48c3-9c95-46bbb77aac5d)
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/ca46c349-8e76-4631-938f-395754c4383e)
-   El excel fue creado, asi que ahora vamos a ver si realmente se creo y como se creo. (En este caso, el cliente solo emite Facturas Recibidas, asi que la hoja de "VENTAS NUEVO" esta completamente vacia):
+   El excel fue creado, asi que ahora vamos a ver si realmente se creo y como se creo. (En este caso, a este cliente solo se le registran Facturas Recibidas, asi que la hoja de "VENTAS NUEVO" esta completamente vacia):
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/665768c4-2c7b-4457-b82f-d1c3ad57a546)
 ![image](https://github.com/marcosziadi/excels_afip/assets/82457357/ae6e596e-79da-49e0-b150-5694fc54cb1d)
 
